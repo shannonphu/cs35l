@@ -1,0 +1,219 @@
+Locale
+
+Environment Variables:
+	    1. HOME: path to user's home directory
+	    2. PATH: list of dir to search in for command to execute
+- to change value: export variable_name
+- data gotten from LC_* variables
+ie: LC_TIME(date/time formats), LC_COLLATE(sort oder, if =C sorted in ASCII order)
+
+Commands:
+1. sort
+- sorts lines of text file
+  ie: sort [option] file_name
+2. comm
+- compares 2 sorted files line by line
+  ie: comm [option] file1 file2
+  Output: 3 columns
+  1. all lines unique to file1
+  2. all lines unique to file2
+  3. lines in both files
+3. tr
+- translate/delete characters
+  ie: tr [options] set1 [set2 optional]
+      tr 'A-Z' 'a-z' file_name
+- -d option to delete characters
+  tr -d 'ab' = delete a and b
+
+
+Shell Scripting
+- file that has bash commands
+- when executed new child shell process spawned to run program
+- first line in script states which child shell to use
+  #! /bin/sh
+  #! /bin/bash (for bash shell)
+     #! - shebang
+
+     Example:
+     - before each lab remove old directory called assn1
+     - create new directory called assn2
+     - create 3 files in assn2
+
+     #! /bin/bash
+
+     rm -r assn1
+     mkdir assn2
+     touch assn2/lab.txt
+     touch assn2/ans.txt
+
+     To run: ./shell_file.sh
+
+Exectution Tracing: see commands as executed
+	   set -x = turn on
+	   set +x = turn off
+
+Output w/ echo/printf:
+echo -e : understand escape characters
+printf : can format output
+       printf "%.3e\n" 4636.1233124123
+       4.636e+07
+       printf "%s\n" "hello"
+       printf "%d\n" 1
+
+Variables:
+	var="hello" (no spaces)
+	echo $var
+
+	Shell Script:
+	      #! /bin/bash
+	      message = "je"
+	      echo $message
+
+Exit/Return Value:
+- return 0 = exit successfully
+- > 0 = failed to execute
+- 126 = command found but file not executable
+- 127 = command not found
+- > 128 = command died due to receiving signal
+
+Built-in Shell Variables:
+echo $? = put into script, show if previous command ran or failed
+echo $# = check how many arguments
+IFS = determines splitting of data/text by what character
+    ie: IFS='\n' split by new line chars
+
+Arguments:
+./script shannon password
+- $1 = first argument, $2 = 2nd argument, etc.
+
+Conditional Flow in scripts:
+	    if [ 5 -gt  1 ] <-- need spaces before/after brackets
+	    then
+		echo "5 greater than 1"
+	    else
+		echo "not possible"
+	    fi
+
+Quotes:
+1. single '' : literal meaning
+   ie: var = "hello"
+   echo '$var'
+   --> $var
+2. double "" : expands backticks and $
+   ie: echo "$var"
+   --> hello
+3. backticks `` or $() : expands as shell commands
+   ie: temp=`ls` ; echo $temp
+       --> puts results of command into variable
+
+Loops:
+	while [ $count -gt 0 ]
+	do
+		// something
+		let count=count-1
+		    // let used for arithmetic
+		    count=$count+1 concatenates numbers like strings, so use let
+	done
+
+	for f in $temp
+	do
+		echo $f
+	done
+
+Regex:
+. match any single char
+  ie: ab.cd --> ab_cd
+* match any number 0+ of previous char
+  ie: ab*cd --> acd, abcd, abbbbbbbcd, etc.
+  tols.*toy --> any sequence of any length in between
+^ match following regex at beginning of line/string
+  ie: ^hi
+$ match previous regex at end of line
+  ie: tolstoy$
+  ^tolstoy$ --> line containng only word tolstoy
+[] match any of char inside
+  ie: [Dd]ay match both upper/lower case day
++ match 1+ instances, like *
+? match 0 or 1 instances
+  ie: ab?cd --> acd, abc
+{3} match 3 instances
+  ie: ie: ab{3}cd
+[:alpha:] match any alphabetic char
+[:digit:]
+[:blank:]?
+
+4 Basic Concepts:
+  1. quantification - how many times of expression
+     ? 0 or 1 / single
+     * 0+
+     + 1+
+     {n} n times
+     {n,m} between n and m
+     {n,} at least n
+  2. Grouping - which subset of previous expression
+     (ab)* match whole expression in ()
+     ab* only affects immediate char before ie: a, ab, abb
+  3. Alternation - which choices
+     [] and |
+     ie: [Tt]olstoy <-- single char
+     	 boy|girl < -- whole string
+  4. Anchors - where
+     ^
+     $
+
+Searching for Text:
+grep: uses BRE regex to find text pattern and extract lines
+- ? + [ ] ( ) lose special meaning, so have to escape it
+      ie: cat file | grep "regex"
+      - to find all lines starting/ending with same word
+      cat file | grep ^\([A-Za-z]\+\).*\1$
+egrep(grep -E): uses extended regular expressions (ERE), no backslashes needed
+ie: ab{3}cd
+    grep: looks literally for string
+    egrep: actual regex
+fgrep(grep -F): matches fixed string literally, no regex
+
+who - see whos online
+
+sed: replace parts of text, does not know extended regex so must backslash
+     ie: sed 's/regex/replace_text/[g]'
+     	 s/ means substitute
+	 [g] optional global, if want replacement for all occurances
+     ie: echo $PATH | sed 's/:.*//'
+     - to remove html brackets: sed 's/<[^>]*>//g' file
+     - sed 's/<\(.+\)>/\1/g'
+       () save .+ and can reprint
+
+HW2:
+check if 2+ files have same content (cmp)
+      vs diff (output diff lines)
+      if so, decide which one to keep, keep file whos name alphabetically first or start w/ .; replace duplicates w/ hard links
+      if file is hard link, treat like normal file
+      deal with special characters (names w/ spaces, with *)
+
+Sample Code
+#! bin/bash
+dir=$1
+RESULT=`ls -a $dir` # get hidden files too
+declare -a ARRAY # man declare -a option declares array
+let count=0
+for FILE in $RESULT
+do
+	if [! -L "$dir/$FILE" ] # if not symbolic link
+	      	 	      	# in "" give whole path to file
+	then
+		if [ -f "$dir/$FILE" ] # if regular file 
+		then
+			ARRAY[$COUNT]="$dir$FILE"
+			let count=count+1	
+		else
+			# not regular file
+		fi	
+	fi
+done
+
+Checking Hard Links
+inode: data structure storing info about files (type, permsision, owner, size)
+       - ID'ed by unique #
+
+for i in "${arrayName[@]}" <-- iterate over array

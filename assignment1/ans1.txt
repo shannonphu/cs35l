@@ -1,0 +1,94 @@
+Lab:
+
+1. man -k <keyword looking for>. I found this by doing man man and
+finding that the option -k can be used for this.
+
+2. cp is in /bin/cp and wc is in /usr/bin/wc. This was found by
+using whereis.
+
+3. Many files show up, when searching recursively through the root
+directory. There are too many to list. The command I did was
+find / -executable -name ?
+
+4. /usr/bin/cc is a link to gcc. I found this by doing ls -l /usr/bin/cc.
+
+5. chmod g-s means to remove the file's group members' permission to
+access the owner's file. It turns off a setguid bit and restricts access
+from the owner's file after that temporarily gave permission to group.I
+found this by doing man chmod
+
+6. -mtime. I found this by doing man find.
+
+7. find -type d (find type of directory) -mtime 3
+Using the above command, I got:
+
+./Desktop/CS35L/assignment1/exer2.html~
+./Desktop/CS35L/assignment1/ans1.txt~
+./Desktop/CS35L/assignment1/key1.txt~
+./Desktop/CS35L/assignment1/exer3.html~
+./Desktop/CS35L/assignment1/exer2.diff
+./Desktop/CS35L/assignment1/#exer1.html#
+./Desktop/CS35L/assignment1/exer4.html
+./Desktop/CS35L/assignment1/exer2.html
+./Desktop/CS35L/assignment1/exer3.diff
+./Desktop/CS35L/assignment1/exer3.html
+./Desktop/CS35L/assignment1/exer4.html~
+./Desktop/CS35L/assignment1/exer4.diff
+
+8. whereis find
+   find * /usr/bin/ | wc -l 
+   (gets all files in usr/bin and returns count)
+   find * /usr/bin -type l | wc -l
+   (gets all symbolic links in usr/bin and returns count)
+
+   There are 357 symbolic links in the same directory as find.
+   
+9. The oldest file is called "sgmlwhich" that was last made on
+   Nov 17, 2000.
+   This was found by doing ls -l /usr/bin/ --sort=time.
+
+10. Locale gets its data from the local environment variable, LC_*.
+
+11. When I looked up the documentation of Emacs, sort exists in
+sort-lines, sort-paragraphs, sort-pages, sort-fields, sort-numeric-fields,
+and sort-columns. 
+
+12.
+C-a: go to beginning of line
+C-b: backspace 
+C-c: exit recursive edit 
+C-d: delete character in front of cursor
+C-e: go to end of line
+C-f: move cursor forward
+C-g: quits current prefix command
+C-h: help
+C-i: tab
+C-j: make new line
+C-k: kill line
+C-l: recenter
+C-m: make new line
+C-n: next line
+C-o: make new line below
+C-p: go to previous line
+C-q: insert
+C-r: search backwards
+C-s: search forward
+C-t: swap characters
+C-u: universal argument
+C-v: scroll up
+C-w: cut
+C-x: C-x prefix
+C-y: yank, paste
+C-z: suspend emacs
+
+13. C-g can be pressed when the user is midway into a command that takes
+multiple key strokes to accomplish but wants to quit mid-way. An example
+is C-x C-s to save the Emacs file. C-x could be pressed, and then the user
+could change their mind before pressing C-s and could thus cancel the C-x
+by doing C-g to prevent any accidental commands.
+
+14. Yank pastes text the user copied or cut into their clipboard.
+
+15. Emacs dired command gives more files than ls -l does and
+    shows more hidden files. To do this, I compared the output
+    of ls -l and M-x dired for /usr/bin.

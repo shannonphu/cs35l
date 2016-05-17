@@ -1,0 +1,66 @@
+System Calls
+
+Kernel vs. user mode
+- separation for protection(no damage other processes) and fairness (so processes have fair use of devices/CPU)
+--> privileged instructions can only be executed by trusted code
+    + only kernel (core of OS interfacing hardware/software) code is trust-worthy
+    + user can ask for permission fr kernel so kernel will execute operation
+    -> system call
+
+System Call
+- function requesting service from kernel
+- changes CPU mode fr user to kernel
+- only way user program can perform priviledged operations
+function call v. system call
+- function call: caller/callee in same process
+- system call: control transferred fr user process to OS
+  + trap interrupts program to transfer control to OS
+  + lots of overhead so expensive/hurt performance
+  b/c process interreupted and computer saves state, OS take control,
+  execute request, restore saved context, give control back
+
+Library Functions
+- solution to slow system calls to avoid overhead
+- ie: getchar, putchar vs read, write
+      fopen, fclose vs open, close
+- perform privileged operations faster although indirectly does
+  system calls b/c make fewer system calls
+  + does this through buffered I/O
+    - store data want to write in a buffer (not memory) till full then makes
+      system call for whole buffer to write to memory in 1 call
+  + unbuffered I/O makes every byte read/written by kernel
+
+Lab 7:
+- write 2 versions of tr
+1. tr2b.c lib func (getchar putchar)
+2. tr2u.c sys call (read write)
+
+Errors: tr 'abcd' '123' <-diff set length
+	tr 'aab' '123' <-ambiguous
+
+strace should show tr2b has less sys call
+strace -o strace_output ./tr2b < test
+
+time - 'sys' time should be longer for unbuffered version
+
+
+HW:
+Part 1
+1. rewrite sfrob to use unbuffered I/O (read/write)
+2. use fstat to get size of file
+3. print # comparisons w/ fprintf
+4. measure diff in performances betw sfrob and sbrobu
+
+Part 2
+- shell script, not C script
+- same func as sfrob, but use tr and sort to sort encrypted input
+- no temporary files
+- compare performance
+
+#! /bin/bash
+cat | tr ?? | sort | tr ??
+
+- can rep any byte in tr using octal notation \000
+  + '\n' rep in octal '\000'
+- list all 256 ASCII to tr to frobnicated
+cat | tr '\004\006...' '\052\064...'

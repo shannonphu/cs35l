@@ -1,0 +1,66 @@
+SSH (Secure Shell) Setup
+
+- SSH allows logging into remote server over internet
+Want to guarantee:
+- confidential communication
+- data integrity (doesn't get corrupted)
+- authentication (identity confirmation)
+- authorization (access rights to resources)
+
+Predecessor = telnet
+- security issue that anyone listening to network can see client-server data transfer
+--> ssh encrypts password/data transferred
+
+Encryption Types:
+- ssh use both
+1. Symmetric/Shared/Secret Key Encryption
+   - use same key to encrypt and decrypt
+2. Asymmetric Key Encryption
+   - 2 diff related keys (public private)
+   - if use 1 key to encrypt, use other to decrypt
+   - key used depends on goal
+   - only creator knows relation
+   - public key can be shared publicly but private key secret
+   - lots of overhead
+
+Process of SSHing:
+1. Host Validation/Server Authentication
+   - make sure server fingerprint correct
+2. Client and server agree on symmetric encryption key (session key) to encrypt/decrypt all data transferred
+3. Client Authentication (password prompt or key-based)
+   - make key pair on client
+   - copy public key to ~/.ssh/authorized_keys
+   - server authenticates client's private key
+
+ssh-agent: password-less ssh
+- ssh-add adds user to list maintained by ssh-agent so when password added to ssh-agent user wont be prompted for it again whem SSHing
+
+Lab:
+log in to partners computer (w/ ssh)
+use key based authentication (generate key pairs)
+    ssh-keygen
+using ssh-agent to store passphrase
+use x11 forwarding
+
+On Ubuntu
+
+ssh-keygen
+sudo useradd -d /home/<homedir name> -m <username>
+sudo passwd <username>
+cd /home/<homedir_name>
+sudo mkdir .ssh
+sudo chown -R username .ssh
+sudo chmod 700 .ssh
+
+Client:
+ssh-keygen
+ssh-copy-id -i <UserName@server_ip_addr>
+ssh-add
+ssh <UserName@server_ip_addr>
+ssh -X <UserName@server_ip_addr> (X11 forwarding)
+
+
+Data Integrity:
+- certificate = document saying public key belongs to certain user
+  	        encrypted by owner's private key
+		decrypt using public key

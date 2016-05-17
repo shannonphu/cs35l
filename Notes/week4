@@ -1,0 +1,76 @@
+Change Management:
+
+figure out where changes happened (diff)
+apply changes (patch)
+
+Git Architecture
+4 Object Types:
+1. blobs - file system files/sequence of bytes
+2. trees - file system directories
+3. commits
+   point to new snapshot of project and old commit
+4. tags - names to commits, hash numbers
+
+head: pointer to commit object
+      HEAD: refers to current checked out/active commit/working copy
+
+Get repo:
+git init
+git clone
+
+Commits:
+git add - add files to index
+git commit
+
+Get info:
+git help
+git status
+git log
+git show - git equivalent of cat to show blob contents
+    ie: git show [hashnumber] 
+git diff - like bash diff, shows changes made compared to index
+
+Undoing:
+git checkout
+    version of branch
+git revert: applies patch, reverts to past state of repo
+
+diff .-
+     compare current directory to stdin --> error
+
+backporting patch to work for old version 3.0
+
+Branches:
+- point to head commit of repo + all ancestor heads
+- default master branch exists (points to last commit made, moves forward automatically every commit)
+
+Fast-Forward Merge:
+git checkout master
+git merge otherBranch
+    - moves master to otherBranch
+
+HW:
+make new branch called quote
+git checkout v3.0 -b quote
+
+use patch from lab
+patch -pnum < quote-3.0-patch
+
+make changelog entry (C-x 4 a)
+     records all commit msgs
+
+commit changes
+       git add .
+       git commit -F changelog_file
+       	   uses msg in file
+
+make new patch for others
+     git format-patch -[num] --stdout > formatted-patch.txt
+
+partner patch
+	git am <formatted-patch.txt <-- apply patch
+	make check (runs test cases)
+
+gitk:
+-use x11 forwarding, b/c cant see GUI in gitk
+ssh -X username@lnxsrv....

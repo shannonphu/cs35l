@@ -1,0 +1,25 @@
+1. If the other team was observing the data transfer
+over the network, the network is still secure since
+data transfer is encrypted. If our keyboards were
+tapped, our security might still be upheld, just the
+other team could see what commands we type. But since
+the keys generated gets printed to the screen instead
+of us typing it, they would not be able to see that.
+A potential security risk in that though would be that
+the other team would know the password we set, and that
+could be used to get our private keys. If we boot off
+USB and the ther team physically could get access to
+that USB, then we would have no more security anymore.
+THe USB is where all of our data is stored, including
+our private keys so the attacker could look for this
+information without any restraint.
+
+2. gpg --verify when I looked into the man page does not
+include using a certificate in its verification. It simply
+depends on a public key given by the receiver to verify.
+Whereas an actual certificate links the user to their
+private key to ensure that the person using the public key
+is actually the legitimate person in question.
+I would go about fixing this problem by requiring the use
+of a certificate to check the user is actually the one
+inputting the public key.

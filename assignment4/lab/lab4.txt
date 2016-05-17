@@ -1,0 +1,83 @@
+First I git cloned the git repository by doing git clone
+git://git.savannah.gnu.org/diffutils.git. I saved the commit
+history by saving the output of git log into git-log.txt.
+I also saved the output of git tag to git-tags.txt. I then
+opened git-log.txt and found the commit with the message
+given in the lab spec and copied/yanked that into quote-
+patch.txt. Another way to get the patch is to do git show
+an then put the commit hash-number. The output will be
+saved into quote-patch.txt. Then to see the v3.0 repository,
+I ran the command git checkout v3.0. The tag v3.0 I suppose is a
+shortcut to the actual hashnumber for the last commit
+made in version 3.0 of diffutils. 
+
+While I tried to apply the patch, some files did not
+exist during v3.0 so I skipped those. These files were:
+HACKING
+doc/diffutils.txi
+man/help2man
+
+src/diff.c had 3 hunks fail
+src/diff3.c had 1 hunk fail
+
+After most of the patches have been successfully
+applied I ran git status and saw all the files that
+were modified and the new .rej files that are
+untracked but have been added to the repository.
+
+To learn how to use vc-diff, I made a new Git
+repository with a text file in it. I did this
+by doing
+mkdir trial
+cd trial
+git init
+touch test
+git add test
+git commit -m "add files"
+
+Then I opened the text file in emacs and did C-X
+v =. A buffer opened up showing me the patch of
+my current changes with respect to my previous commit.
+
+To learn about the emacs functionalities for version
+control, in the wc-diff buffer I went into describe-mode
+and looked into the file names diff-mode.el.gz. I found
+the function descriptions for diff-apply-hunk and
+diff-goto-source. I found that diff-apply-hunk would
+apply the current hunk to the source file. diff-goto-source
+jumps to the corresponding source line passed into its
+parameters.
+
+I started looking into the src/*.c.rej files. I had to manually
+fix diff3.c because in 1 line ` was not replaced by '. I also
+had to fix diff.c in the same way.
+
+To remove the untracked files, I did git clean -n to first see what
+files would be unstaged. Then seeing the correct output I ran git
+clean.
+
+I then saved the outputs of git diff into quote-3.0-patch.txt.
+
+I read README-hacking and ran
+./bootstrap
+./configure
+make
+make check
+
+During make check though I can across some errors in making
+basic.log, check-TESTS, check-am, and check-recursive.
+When I run diff .- it outputs "diff: cannot compare '-' to a
+directory". And diff --help outputs nothing with ` characters.
+So from this small test, ` characters have been translated into
+' characters.
+
+I git cloned the original repository into another folder and
+made a diff patch to compare my modified/patched version with
+the v3.0 source code. The diff was saved into quote-3.0-test.txt.
+I called the diff executable from the version I modified.
+
+When I compared the patch with the diff between my modified diffutils
+directory and the source code directory, I found that were were some
+differences in mainly just the name of the folder when I renamed it.
+So these differences are harmless. Some changes were in the reverting
+of the c files in my patch where I undo the comment changes.

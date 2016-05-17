@@ -1,0 +1,96 @@
+Week 2:
+- regex
+- more advanced linux commands (grep, sed, tr, find)
+- bash scripting
+- links
+
+Regex:
+1. Quantity
+   * 0+
+   + 1+
+   ? 0 or 1
+   {n} exactly n ie: a{3} == aaa
+   {n,} at least n ie: a{3,} == at least 3 a's
+   {n,m} between n and m occurences
+2. Location
+   ^ match at beginning of line
+   $ match at end of line
+3. Alternation (choices between expressions)
+   [] choice betw single char ie: [a-z] range or [!,\-] 3 choices
+   | choice betw whole words ie: (a*|b*), (apple | boy)
+4. Grouping
+   () ab* == a, ab, abb,... vs (ab)* == ab, abab,...
+
+grep: extract lines with regex
+grep - basic regex understanding
+egrep - extended regex understanding
+fgrep - fixed regex, all literal
+differences: special symbols like ?+{}()| only understood by egrep
+	     grep interprets as literal strings unless escaped
+	     egrep interprets as special regex symbols
+
+=========================================
+Example:
+script.sh:
+#TODO
+#FIX ME
+
+Task: replace comment text using all greps
+
+cat script.sh | grep -E "^#(TODO|FIXME)"
+cat script.sh | grep "^#\(TODO\|FIXME\)"
+cat script.sh | grep -F "#TODO"
+cat script.sh | grep -F "#FIXME"
+==========================================
+
+sed: substitute text
+     s command - substitute
+sed 's/expression_to_replace/replacement/[g]'
+    g - option to globally replace otherwise replace first one
+- sed basic regex by default ==> to understand extended add -r
+===========================================
+Example:
+cat script.sh | sed 's/^#.*//g'
+===========================================
+
+Backreferencing:
+============================================
+Example:
+Replace format of phone number (999)999-9999
+- use \( \) to save values to use later, saved in \1 and \2 and \3
+
+cat phone.txt | sed 's/ (\([0-9]\{3\}\))\([0-9]\{3\}\)-\([0-9]\{4\}\) / \1\2\3 /g'
+============================================
+
+Find:
+find / -name "hw.txt"
+find / -name "hw.*" <- * wildcard in linux matches for anything
+find / -maxdepth 2 "file"
+
+-mtime -3 3 days before (modification time)
+-atime +3 at most 3 (access time)
+-perm 777 (permissions)
+-user eggert (owner of file)
+-type d (directory) l (link) f (regular)
+
+
+
+Bash Scripts:
+#!/bin/bash
+var=5
+echo $var
+# - gt -lt -eq -neq
+if [ $var -gt 0  ]
+then
+	...
+elif
+	...
+else
+	...
+fi
+
+Environment Variables:
+$? = return value of previous command
+$# = # arguments in script
+   (not including name of script, diff than bash and python that include name of script)
+$1, $2 = arguments

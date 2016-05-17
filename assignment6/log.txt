@@ -1,0 +1,23 @@
+I booted Ubuntu on the lab computers from a CD and
+after running dpkg --get-selections | grep openssh,
+I had to also install the openssh-server since I
+already had the client.
+When running ssh-keygen, I saved the key in /home/
+ubuntu/.ssh/id_rsa, the default location and was
+prompted to enter a password which I did.
+Then the terminal gave me a key fingerprint and
+showed a randomart image.
+Then I set up an account for the client side by doing
+sudo useradd -d /home/collin/ -m collin
+sudo passwrd collin
+and entered in a password.
+I made a .ssh directory for collin's user account
+, and I changed its permissions with sudo chown -R collin .ssh and sudo chmod 700 .ssh.
+
+Doing the client part, I did ssh-copy-id -i
+shannon@10.97.85.162 and ssh-add. Then I
+SSH'ed into the server and was able to run xterm
+and have the GUI pop up on my computer.
+
+
+

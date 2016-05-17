@@ -1,0 +1,34 @@
+--- exer1.html	2015-09-21 12:50:15.000000000 -0700
++++ exer3.html	2015-09-26 17:50:38.761902344 -0700
+@@ -4,12 +4,12 @@
+ <html>
+ <head>
+ <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+-<title>Assignment 1. Getting to know your system</title>
++<title>Assignment 37. Getting to know your system</title>
+ </head>
+ 
+ <body>
+ 
+-<h1>Assignment 1. Getting to know your system</h1>
++<h1>Assignment 37. Getting to know your system</h1>
+ 
+ <p><small>[<a href='../index.html'>35L home</a> &gt; <a href='../assign.html'>assignments</a>]</small></p>
+ 
+@@ -28,6 +28,7 @@
+ submit as part of the assignment.</p>
+ 
+ <ol>
++
+ <li>
+ How can you get <samp>man</samp> to print all the commands that have a specific
+ word in their man page (or at least the description part of the
+@@ -176,7 +177,7 @@
+ <li>Use Emacs to edit the file <samp>exer3.html</samp>.</li>
+ 
+ <li>Change the first two instances of "Assignment 1" to "Assignment 37".</li>
+-<li>Change the first instance of "UTF-8" to "US-ASCII".</li>
++<li>Change the first instance of "US-ASCII" to "US-ASCII".</li>
+ <li>Insert a blank line after the first line containing
+ "<samp>&lt;ol&gt;</samp>".</li>
+ 

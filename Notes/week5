@@ -1,0 +1,170 @@
+GDB:
+- C, C++, Java, Objective-C
+- logical errors/segmentation fault easier to find
+
+Using GDB:
+1. Compile: gcc <source_files> -o <output_file>
+   -o give name to executable
+   To debug, add -g flag
+   gcc -g <source_file> -o <output_file>
+2. Specify Program to debug
+   gdb <executable>
+3. Run Program
+   (gdb) run [arguments]
+4. In GDB shell
+   - set breakpoint: (gdb) break file1.c:6 <-- line #
+     	 	     (gdb) break my_function
+		     (gdb) break [position] if expression
+   - check breakpoints: (gdb) info b
+   - remove breakpoint: delete [bp number | range]
+   - disable break point: disable [bp number | range]
+   - enable breakpoints: enable [bp number | range]
+   - print data: (gdb) print [format] expression
+     ie: print x > 3
+   - continue after breakpoint:
+     	  1. continue
+	  2. next: next time as single instr
+	  3. step: same as next but functions executed line by line
+	  4. finish
+   - watchpoints
+     (gdb) watch var_name : stops program when value of var changes
+   - show call stack
+     (gdb) backtrace
+   (gdb) list
+   (gdb) info functions
+5. Quit GDB
+   (gdb) quit
+
+Run-Time Errors:
+1. Segmentation fault
+   - error given
+2. Logic Error
+   - no error for incorrect output
+
+Linux Memory Layout:
+args/env vars
+stack (down grow)
+      for function calls and keeping stack frames
+      stores local variables, return address of function, parameters
+      ** when main returns, program exits, no more stack frames
+unused mem
+heap (up grow)
+uninitialized data segment (bss)
+initialized data segment
+text segment
+
+Lab:
+untar
+configure
+make
+
+gdb ./ls
+run -lt wwi-armistice now now1
+
+make patch lab5.diff
+
+
+if try ls -t in home directory on SEASNET
+show 2054 instead of 1918
+reason: time stamps form by # of seconds since midnight of Jan 1st, 1970 (Unix epoch)
+tmp and ~ are 2 diff file systems that rep timestamps differently
+    ~ : 32 bit unsigned
+    tmp : 32 bit signed
+
+
+
+GDB use
+gcc -g executable
+break main
+run
+list (for context)
+n (next line)
+s (step into func)
+p var_name
+p n>0
+
+
+GDB in Emacs
+emacs file.cpp
+M-x gud-gdb (if have stdin)
+r
+n
+etc.
+
+HW
+Pointers to functions aka Functors/Function pointers
+ie: sorting function to sort in diff order
+- user can pass in function to sort function (function passed in as parameter)
+Declaration:
+	double(*func_ptr)(double,double);
+	func_ptr = &pow; <-- function
+Usage:
+	double result = (*func_ptr)(1.5, 2.0);
+	or
+	result = funct_ptr(1.5, 2.0)
+
+
+qsort example:
+
+C:
+no classes, use structs
+struct Student {
+};
+struct Student s;
+
+typedef struct {
+} Student;
+Student s;
+
+C Struct:
+- no member functions or defined constructors
+
+Memory Management:
+malloc - returns ptr to memory allocated
+       - allocates size bytes
+       void *malloc(size_t size)
+realloc - changes size of memory block pointed to by ptr to size bytes
+	void *realloc(void *ptr, size_t size)
+- returns pointer
+void free(void *ptr) - frees block of memory at ptr
+
+HW
+int getChar() retusn next char fr stdin
+int putchar(int character); writes character to current position in stdout
+EOF tells us no more bytes to read from stdin
+
+fprintf(FILE *fp, const *char format,...)
+printf("%s has %d points.\n", name, score);
+f = fopen("filename.txt", "r");
+fprintf(f, "%s has %d points.\n", player, score) <-- write to file filename.txt
+fprintf(1, "msg") <-- print to stdout
+
+Compiling program
+gcc -o binary -g foo.c
+
+
+sfrob.c:
+printf "word1 word2 word3..." | sfrob
+- each input byte is frobnicated (XORed w/ 42)
+  54 XOR 42 = 20
+  20 XOR 42 = 54
+- output words in sorted ascii order
+unfrobnicate->sort->frobnicate
+
+memfrob - unfrobnicates word in place so dont use
+need to make sure no decoded data written to memory
+     -> never assign unencrypted data into variable
+     	ie if(n^42)
+
+read stdin byte by byte (getchar)
+each byte XOR w/ 42
+     sort w/o decoding (qsort, frobcmp)
+     output frobnicated result (putchar)
+error checking (fprintf)
+      exit not return
+dynamic mem alloc (malloc realloc free)
+
+Hint:
+1D vs 2D (2D is char** array)
+test code with od -ta to show not printing additional spaces, tabs, null char
+     printf "string" | sfrob | od -ta

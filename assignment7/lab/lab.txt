@@ -1,0 +1,74 @@
+I started off by writing a main function that could
+take in 2 arguments "from" and "to" that were of
+type char *. Since this has to be dynamically
+allocated memory, I had to consider the sizeof these
+2 operands. To allocate the proper amount of memory,
+I got the length of the C-string array and malloc'ed
+the proper size matching the string into a local variable.
+Next I worked on getting my C script to read in a file
+that was passed in with cat on the command line. I referred
+to my sfrob script from week 5 which used getchar() to read
+in bytes. I reallocated memory when needed until EOF was
+reached. Then while reading each character I checked
+if this character was in the from operand to translate.
+If it was I outputed the "to" second operand translation
+for that character, otherwise I printed the original
+character.
+
+I also checked for if the length of the 2 operands were
+unequal or if the "from" operand had repeated characters.
+If so, then I would print out an error message and exit
+the program. Another edge case I covered was if no arguments
+were passed in, in which I exited the program with an
+error message printed.
+
+To deal with deallocating my dynamically allocated memory,
+I had to call free on my pointers that had malloc'ed memory.
+An issue I ran into was deallocating memory where I had just
+set a pointer's address to some C-string array instead of
+calling strcpy on it. I realized I had to call strcpy()
+on the C-string arrays or else there would be issues in
+deallocating memory that I did not allocate.
+
+I also took into account if the user wanted to translate
+double or single quotes, but when trying the Unix tr command
+I could run without the quotes around the arguments and
+the same result occurred if I wanted to translate a quote.
+Standard in would just wait for me to close the quote in
+standard in.
+
+After, I ran the command strace -o strace_output ./tr2b
+<from> <to> on a file that contained 5 million characters.
+The proper result output, and I checked the strace output
+file. It contained a list of the system calls made, and
+I noticed how characters in tr2b were written out and read
+in in chunks in large buffers. I also ran the strace
+command with the -c option to see the summary of calls and
+how long they took.
+
+When I ran it for tr2u, the program took a very long time
+to run and produced a very large (over 300MB) strace file.
+There were calls to read and write a single character at
+a time. Therefore the difference between tr2u and tr2b is
+extremely big. tr2b used a buffer to hold chunks of the
+output and input that would be read and written while tr2u
+read and wrote one character at a time.
+
+I did this for both buffered and unbuffered, for the case
+where we copy to terminal and where we copy to a file. The
+difference between copying to terminal and copying to a file
+was that the buffer size seemed to be different. For copying
+to terminal, the buffer seemed to be 1024 bytes large whereas
+the buffer used when copying to a file was 65536 bytes large.
+
+When running the time command on tr2b, this was the output
+I got:
+0.30user 0.05system 0:00.52elapsed 68%CPU (0avgtext+0avgdata 452maxresident)k
+0inputs+0outputs (0major+138minor)pagefaults 0swaps
+
+When running time on tr2u, this was my output:
+0.52user 7.16system 0:07.70elapsed 99%CPU (0avgtext+0avgdata 416maxresident)k
+0inputs+0outputs (0major+129minor)pagefaults 0swaps
+
+So it is obvious that the time the system spent on running
+the program is much longer for unbuffered I/O.

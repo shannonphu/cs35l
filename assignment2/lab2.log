@@ -1,0 +1,54 @@
+Lab:
+
+The first line translates all non-letter characters
+into new lines. So A-Z and a-z will be preserved, but
+all other characters will be replaced by a new line.
+
+The second command prints only 1 new line if there are
+supposed to be multiple consecutive new lines. The
+previous command printed multiple new lines, once for
+every non-alphabet character, but now only 1 new line
+will print for any number of consecutive non-alphabetic
+characters.
+
+The third command does the second command's functions,
+but also sorts each line alphabetically and by ASCII
+code.
+
+The fourth command does the above, but also removes the
+repeated words that appear on the list.
+
+The fifth command compares the sorted version of the
+words in assign2.html with the content of file named
+words. It only outputs column 1 which has the words
+unique to assign2.html.
+
+The sixth command does the same things as command 5,
+but also suppresses teh second and third columns of
+output.
+
+To get the number of words "misspelled" when cross-
+checking with hwords, we should do the command:
+cat file.txt | tr 'A-Z\ ' 'a-z\n' | sort -u |
+    comm -23 - hwords | sed '/^\s*$/d' | wc -l
+This command lower-cases all letters and comverts
+any spaces into new lines, sorts, then compares to
+hwords. Then it prints out the number of words
+that do not exist in hwords. When the above command
+is run on the lab web page, it gets 523 misspelled
+words. When run with the Hawaiian dictionary page's
+HTML, it gets 590 "misspelled" words which are probably
+the English words. When ran with hwords itself, it gets
+0 mispelled words which is expected.
+
+An example if a word that is mispelled as Hawaiian based
+on my spell checker is the word "won" which is valid
+English. As for a correct Hawaiian word that is invalid
+in English, an example would be almost every word in hwords.
+This includes hanai, nani, ame, pane, etc.
+
+Homework:
+
+sameln deals with files that have a space in between file
+names, but does not deal with files that have a '-', '*',
+etc in the front.

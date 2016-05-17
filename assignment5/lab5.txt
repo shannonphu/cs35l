@@ -1,0 +1,91 @@
+I unzipped the tarball for the coreutils source code.
+After running ./configure and make, I got some errors
+in the function futimens. The terminal also output:
+"Makefile:659: recipe for target 'utimecmp.o' failed"
+and the targets utimecmp, all, and all-recursive failed.
+
+After I applied the patch with patch -p0 < coreutils.diff,
+I ./configure and make again and the errors were fixed.
+So then to run the patched corutils ls command I did
+./src/ls -lt $tmp to see the wwi-armistice file at the
+top of the list. This properly shows me the incorrect
+behavior of this coreutils source code. In the patch, a
+lot of functions were renamed which allowed make to
+execute. The function coreutils_futimens replaced futimens.
+
+
+When I tried to find the cause of the time stamp bug,
+I reproduced the bug first. After calling the ls executable
+of my patched coreutils directory on the $tmp folder, I got
+this output:
+$ ./coreutils-patched/src/ls -lt $tmp
+total 0
+-rw-r--r-- 1 shannon csugrad 0 1918-11-11 03:00 wwi-armistice
+-rw-r--r-- 1 shannon csugrad 0 2015-10-28 17:06 now1
+-rw-r--r-- 1 shannon csugrad 0 2015-10-28 17:06 now
+So the problem was reproduced. I went on to use GDB to
+debug the problem.
+
+I invoked GDB by doing gdb --arg ./src/ls -lt. I also tried
+the Emacs GDB debugger:
+
+Emacs GDB Steps:
+
+emacs ls.c
+split window
+M-x gdb
+gdb i=mi ls
+set args -t
+break sort_files
+r
+
+Then to examine all the functions ls.c contains I did info
+function and found the list of functions ls has. The function
+sort_files seemed to be of interest since that is what the -t
+bug is pertaining to. I set a breakpoint at the function by
+typing break sort_files and I started stepping into the function.
+
+I was brought to a case in a switch statement called "time_mtime"
+which reverse sorts the output of ls if a variable named sort_reverse
+is true or not. Based on that, it will set the sort functor to either
+rev_cmp_mtime or compare_mtime. At the time the sorting function
+was set, sort_reverse has a value of false.
+I then went to go check those function implementations. rev_cmp_ctime
+calls a function named compare_ctime which also calls cmp_ctime.
+Examining cmp_ctime, I found that timespec_cmp was called which is
+in timespec.h. This function would return "Return negative, zero,
+positive if A < B, A == B, A > B, respectively." In our case, since
+the date of the file is old, the function should return a negative value
+if the old file is on the left hand side of the comparison. The data
+in struct timespec that is being compared is "long tv_nsec". I set
+a breakpoint at timespec_cmp so that I could see the arithmetic
+taking place. This function may have been passed into another for sorting
+purposes. So based on its implemented comparison, it will return 0 is
+the tv_sec's are equal in both. The function will return a negative number
+if b.tv_nsec is greater than a.tv_nsec so that b will be ordered after a.
+And a positive number will be returned if a.tv_nsec is greater than
+b.tv_nsec, meaning that it will be sorted so that a is after b.
+
+I corrected the behavior of the program by changing the type of variables
+used. An int type may not have enough bits to store the difference
+between very different numbers, magnitude-wise. So instead of storing
+the difference into an int, I chose to store it in a long long int,
+which is one of the largest primitive data types. I would compare the
+resulting difference and then return the proper expected output so
+that overflow would not cause buggy behavior.
+
+I made a patch of my changes. And to test my patch, I configured and
+maked a new copy of the initial reposititory that was patched so a
+proper build would complete. I tested the ls -lt command and saw that
+wwi-armistice was at the top of the list, buggy behavior. Then I
+applied my patch onto this buggy copy to see the fix in action. I
+ran patch -p2 < ../lab5.diff onto the buggy copy, and when running
+ls -lt on $tmp again, the fix was successful!
+
+When I tried to reproduce the problem on my home directory with the
+already installed touch and ls utilities, the date
+for wwi-armistice showed up to be in the year 2054. This is because
+the time stamps are refernced from the midnight of January 1st, 1970
+which is the Unix epoch. The home directory and the $tmp directory are
+2 different file systems where our home directory is 32 bit unsigned
+while the tmp directory is 32 bit signed.

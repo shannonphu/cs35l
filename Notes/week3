@@ -1,0 +1,177 @@
+Modifying Programs:
+
+To download something: sudo apt-get install emacs
+Build process:
+      configure
+      make
+      make install
+
+Decompressing Files:
+- tarball format (.tgz)
+  tar -xzvf file.tar.gz
+  -x : --extract
+  -z : --gzip
+  -v : --verbose
+  -f : --file
+
+Compilation Process:
+1. C++ preprocessor
+   - makes .cpp source code into expanded source code file
+   - #include<iostream> pastes library there
+     #define COUNT 5 replace macro w/ value
+   - still high level source file
+2. compiler -> assembly code
+   - makes assembly code (.s)
+3. assembler
+   - makes object code file (.o) for each .cpp file
+4. linker
+   - combines all object code files to make 1 executable
+
+Command-Line Compilation
+g++ -Wall shop.cpp shoppingList.cpp item.cpp -o shop
+    -o : name executable
+    -Wall : show all warnings
+- if change one of header/source files rerun g++ command to make new executable
+- if make small change, inefficient to recompile all code, but take more commands
+  -> make separate object code file for each source file
+     g++ -Wall -c item.cpp ...for each source file
+     - makes item.o
+     g++ shop.o item.o shoppingList.o -o shop
+     - makes executable from object files
+- if change header file that is included in multiple files, must recompile every source file that includes it (hard to keep track of)
+-> make
+
+Make:
+- manages large sfotware projects
+- compiles only files that need to be recompiled into object files
+- when make called, looks for Makefile (contains what files to recompile) and starts at first file and checks dependencies for every file examined
+- make files determine what was changed by comparing modification time of file to prerequisites (included files)
+- if no dependency list in Makefile, just runs command specified
+  ie: make clean
+  Clean:
+	- removes object files made
+
+Build Process:
+download tar file
+untar
+./configure
+1. configure
+   - script checks details about machine before installation
+   - creates Makefile
+   ./configure
+2. make
+   - needs Makefile to run
+   - compiles all code and makes executable in home directory
+3. make install
+   - executes install command in Makefile
+   - moves executable to /bin final directory (path to all executables)
+
+
+Lab 3
+- put fake /bin as local directory
+./configure --prefix=______ (find in INSTALL file, install into directory)
+/u/cs/ugrad/shannon/Desktop/CS35L/assignment3/coreutils-7.6
+make
+make install
+
+Reproduce bug
+- see wrong ls date format
+
+Apply Patch:
+copy paste patch onto emacs
+patch -p<NUMBER> < patch_file
+     man patch
+make - to rebuild patch
+DONT INSTALL
+
+local folder will have buggy ls
+~ will have fixed ls
+
+make file year old : touch -t
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Python:
+
+- scripting + OOP
+- compiled + interpreted code
+- using optparse library : parses command line options
+Arguments:
+	sys.argv[0] name of executed program
+	sys.argv[1] 1st argument
+	sys.argv[1:] get all arguments
+Options:
+	argument adding extra info to customize execution
+	ie: ls -l
+Option Arguments:
+       argument following option, associated with that option
+       ie: tar -xvzf file.tgz <-- file.tgz is option argument
+
+Syntax:
+1. List
+   - dynamic size
+   - heterogenous(can hold diff types fo objects)
+   list_name[index]
+   ie: t = [123, 4.0, 'hello']
+   Accessing: print t[0]
+   Appending: list1.append(5)
+   Merging: merge_list = list1 + list2
+2. For loops
+   # list = some elements
+   for i in list:
+       print i
+
+   for i in range(len(list)):
+       print i
+   # range(10) = (0...9)
+3. Indentation
+   - no delimiters
+     ie C {}
+     	bash then...else...fi
+	     do...done
+
+HW:
+randline.py
+- input file and number n
+- output n random lines from file
+- implement comm
+
+Running randline.py
+./randline.py -n 3 filename (need execute permission)
+python randline.py -n 3 filename (no execute permission)
+
+3 command line arg:
+1. n : number lines to write (option)
+2. 3 : number of lines (option arg)
+3. filename (arg)
+
+Strings:
+msg = "message"
+    - if want new line, must put \n
+msg2 = """another message
+       multiple lines
+       long"""
+
+Classes:
+- member functions have to have "self" as first parameter
+- declare instance variables inside functions
+- class variables declared outside functions
+class Dog:
+      list = [] <-- class variable
+      def __init__(self):
+      	  list2 = [] <-- instance variable
+----
+- no int main() equivalent
+
+Parser:
+- parser.parse_args(sys.argv[1:])
+  -> returns list of options and list of args
+- args: 0-indexed starting from sys.argv's index 1
+
+Try/Except:
+- if error/crash in try block, format the exception
+
+__name__ : when running standalone program, run main()
+
+set LC_COLLATE='C'

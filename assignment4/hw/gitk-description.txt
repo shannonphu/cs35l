@@ -1,0 +1,7 @@
+The top-most left panel contains information about the commit that was
+made including the branch and message. The middle-top panel shows who
+made the commit. The right-top panel shows the timestamp of the commit.
+The horizontal bar in the middle shows the hash number of the commit
+selected. The bottom panels show more information about what was changed
+in that commit. It includes information about the parent, child, and
+branches of the commit.

@@ -1,0 +1,56 @@
+#! /bin/bash
+
+IFS=$'\n'
+
+dir=$1
+# get all hidden files
+files=`ls -a $dir`
+
+for file in $files
+do
+    
+    declare -a sameFile
+    let index=0
+
+    # check if full file path not symbolic link
+    if [ ! -L "$dir/$file" ] && [ -f "$dir$file" ]
+    then
+	#compare it with other files
+	for file2 in $files
+	do
+	    # check if regular file and not symbolic link
+	    if [ -f "$dir$file2" ] && [ ! -L "$dir/$file2" ]
+	    then
+		
+		if cmp --silent "$dir$file" "$dir$file2"
+		then
+		    sameFile[$index]="$dir$file2"
+		    let index=index+1
+		fi
+	    fi
+	done
+    fi
+
+    sortedSameFile=( $(for element in "${sameFile[@]}"
+    do
+	echo "$element"
+    done | sort -n) )
+
+    let sortedIndex=0
+    for element in "${sortedSameFile[@]}"
+    do
+	if [ $sortedIndex -gt 0 ]
+	then
+	    rm $element
+	    ln ${sortedSameFile[0]} "$element"
+	fi
+	   
+	let sortedIndex=sortedIndex+1
+    done
+
+    unset sameFile
+    
+done
+
+#unset IFS
+

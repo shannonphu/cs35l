@@ -1,0 +1,28 @@
+I git cloned the original diffutils repository into
+another local directory. Then I checked-out v3.0 again
+and made a new branch called quote from that point.
+I applied my patch I made from the lab by doing
+patch -p1 <../../quote-3.0-patch.txt. Each hunk of my
+diff patch was successfully applied. I attempted to
+use the Emacs Changelog by opening Emacs and doing
+C-x 4 a which opened the Changelog for my current
+diffutils directory. I entered a message and saved it.
+Then I added the modified files to the stage area for
+committing. I committed the changes with the command
+git commit -F Changelog. I confirmed that the commit
+was recorded by doing git log.
+
+Then to generate a formatted patch, I ran git help
+format-patch to check out what this command does and
+how it is used. I ran:
+git format-patch -1 --stdout > formatted-patch.txt
+I included the -1 option to only include the most
+recent patch which was the one I made.
+
+My partner was Elton Leong. When I ran my partner's patch,
+I checkedout a new branch from v3.0 called partner. I
+applied my partner's patch to it by doing git am partner_patch.
+Then I had to rebuild the system by doing ./bootstrap, ./configure,
+make, and make check.
+
+When I ran make distdir, my ChangeLog file did not change.

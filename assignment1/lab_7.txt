@@ -1,0 +1,12 @@
+./Desktop/CS35L/assignment1/exer2.html~
+./Desktop/CS35L/assignment1/ans1.txt~
+./Desktop/CS35L/assignment1/key1.txt~
+./Desktop/CS35L/assignment1/exer3.html~
+./Desktop/CS35L/assignment1/exer2.diff
+./Desktop/CS35L/assignment1/#exer1.html#
+./Desktop/CS35L/assignment1/exer4.html
+./Desktop/CS35L/assignment1/exer2.html
+./Desktop/CS35L/assignment1/exer3.diff
+./Desktop/CS35L/assignment1/exer3.html
+./Desktop/CS35L/assignment1/exer4.html~
+./Desktop/CS35L/assignment1/exer4.diff

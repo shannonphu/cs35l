@@ -1,0 +1,33 @@
+When I compared the performance between sfrob and sfrobu by
+timing them, I got the following times:
+
+Buffered time:
+0.25user 0.02system 0:00.48elapsed 57%CPU (0avgtext+0avgdata 5452maxresident)k
+0inputs+0outputs (0major+1389minor)pagefaults 0swaps
+
+Unbuffered time:
+0.36user 5.11system 0:05.48elapsed 99%CPU (0avgtext+0avgdata 5444maxresident)k
+0inputs+0outputs (0major+1399minor)pagefaults 0swaps
+
+We can obviously see that unbuffered I/O is much
+slower than buffered.
+
+
+
+When I had 3 lines, 2 comparisons were made. When I had about 10
+lines, 25 comparisons were made. When I had about 40 lines, 170
+comparisons were made. When 100 lines were input, about 570
+comparisons were made. When 110 lines were input, 644
+comparisons were made. For 167 lines, 1125 comparisons occured.
+For 300 words, there were 2252 comparisons made. There seems
+to be an accelerating increase in comparisons with respect
+to the lines. So I estimate the function to be about N^2 / 20.
+
+When I timed the shell script, I got:
+0.02user 0.07system 0:00.50elapsed 19%CPU (0avgtext+0avgdata 6796maxresident)k
+0inputs+0outputs (0major+1994minor)pagefaults 0swaps
+
+So we see that the shell script is much faster
+than the unbuffered version I wrote, but a tiny bit
+slower than the buffered version's in terms of
+system calls made.

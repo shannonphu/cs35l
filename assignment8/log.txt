@@ -1,0 +1,45 @@
+I first made the large file of 10 million random
+floating point numbers by running
+cat /dev/urandom | od -tf -N80000000 > large_file
+Then I had to filter this file to remove the addresses
+on the left column using sed and tr. A way I considered
+trying to accomplish this was to make a new line whenever
+a space showed up and suppress repeats. Then I could
+remove every N mod 3 == 0 line assuming N is a zero-
+indexed counter for lines. So first I did
+cat large_file | tr -s ' ' '[\n*]' > file
+which separated numbers into their own line.
+
+Then to remove the addresses, I did sed '1~3d' <file>
+and saved this into a file. But this command gave me some
+problems, such as this error:
+sed: couldn't close stdout: Disk quota exceeded
+So instead of saving to a file, I just allowed
+the output to be printed onto the terminal
+and piped the output into sort commands.
+
+I used the latest version of sort by adding
+/usr/local/cs/bin:$PATH to my path.
+
+To run sort in parallel, I ran the command:
+time -p sort -g --parallel=<num_threads> > /dev/null
+
+For 1 thread, the output time was:
+real 104.39
+user 104.27
+sys 0.12
+
+For 2 threads, I got:
+real 55.34
+user 105.55
+sys 0.13
+
+For 4 threads:
+real 36.03
+user 114.13
+sys 0.18
+
+For 8 threads:
+real 22.20
+user 124.06
+sys 0.23

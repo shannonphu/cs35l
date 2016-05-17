@@ -1,0 +1,30 @@
+Q1:
+Removing case_long_iso_time_style was necessary. Since
+that code section is part of a switch statement, it would
+check for case "long_iso_time_style" and then start
+executing the lines underneath, but since that syntax error
+was placed underneath, it could cause some undefined behavior
+as to how case_ would be interpreted. The code would still
+execute until the break statement, but the syntax error for
+"case_long_iso_time_style" may lead to unexpected behavior
+although there probably won't be an input leading directly
+to that case.
+
+Q2:
+There should not be an issue with the time and date format
+in other locales. The part of the patch that changed the case
+"locale_time_style" called a function called dcgettext. This
+function looks up a translation of the current locale to
+account for differences in locale.
+
+Q3:
+When randline.py is ran with /dev/null, an error occurs
+stating that there is an index error in the list of lines
+from the file. Since /dev/null is "empty", the list in
+the program is empty and cannot be indexed.
+
+Q4:
+There is a syntax error in the statement saying "except
+IOError as (errno, strerror)". This is improper Python3
+syntax and to be compatible should be "except IOError as
+err" instead.

@@ -1,0 +1,179 @@
+Linux System Components:
+
+Kernal:
+	- core of GNU/Linux OS, alloc time/mem to programs
+Shell:
+	- interface betw user and kernal
+Programs
+
+- everything either file (collection of data) or process (running program w/ PID)
+
+File System:
+- tree structure under root directory
+Relative vs. Absolute Path
+	 relative: lakers/etc
+	 absolute: /home/lakers/etc
+
+Commands:
+cd
+	cd ..
+	cd
+pwd
+ls
+	-d: only directories
+	-a: all files including hidden
+	    .file_name = hidden file
+	-l: long list w/ details
+	-s: show file size
+mv
+	mv file /home (move to directory)
+	mv file file1 (same as renaming)
+rm
+	rm -r /home (recursively move under home directory)
+cp
+mkdir
+rmdir (only empty directory)
+chmod (Permissions)
+      rwx
+      user (file owner) 
+      group (users members of group)
+      others (any other system user)
+      all
+      ie: chmod g-x file_name 
+      	  (remove file permissions to file) <- symbolic method
+	  	  + add
+		  - remove
+		  = change permission no matter what currently is
+		    g=w
+      ie: chmod 746 file_name <- numeric method
+          111 100 110
+      	  u   g   o
+	  7   4   6
+touch file_name (make new file)
+      touch -t (set modification time of file)
+find
+	-type: type of file
+	-perm: permission of file
+	-name: by name
+	-user: owner of file
+	-maxdepth: how many levels to search
+	ie: find / -name hw.pdf
+	    default directory searchd is current directory
+
+	File Name Matching:
+	? matches single char
+	* matches 1+ char
+	[] matches any 1 of char in bracket, use '-' to separate range of consecutive char
+	   ie: find -name homework[123].pdf aka homework[1-3].pdf
+
+whereis (locates binary, source, and manual pages for system commands, not user files!)
+whatis (returns name section of man page)
+man (manual pages)
+    man <command_name>
+    man section <command_name>
+
+    Sections:
+        User commands
+    	system calls
+    	library functions (allows to change functions)
+    	devices
+    	file fomats
+    	games+amusements
+    	conventions/miscellany
+    	system admin/priviledge commands
+
+    ie: printf(in man sections user commands and library functions)
+    printf(3) <-- number refers to section number
+    - /character_looking_for
+
+    Man page Structure:
+    1. standard headings
+       - name of command + description
+       - synopsis of how command used
+       	 ie: ls [Option]...[File] <-- [] means optional
+	     			  <-- ... means can combine options
+       - description in more detail + gives options
+    2. other headings
+       - authors
+       - bugs
+       - examples/notes
+       - reporting bugs
+       - copyright
+       - see also (for related commands)
+
+Links:
+	Symbolic: a pointer to pointer for file
+		ln -s orig_file link_name
+		- if remove orig_file, link_name not valid anymore
+		- benefit: shortcut to avoid cd-ing deep into a folder
+		- cant point to file in diff file system
+	Hard: a pointer to file location w/ diff name
+	      ln orig_file link_name
+	      - if remove orig_file, removing pointer to file; can still open w/ link_name
+	      - benefits: save memory b/c dont copy file contents and still back up file
+	- readlink command: show what links point at
+
+Special Permissions:
+	- sticky bit (o+t): locks files fr being written by non-user of file, only for shared directories
+	  ie: /tmp shared dired w/ rwx
+	- setuid, setguid (u+s, g+s): grant access to process running file based on other/group of file rather than user running executable, you become the user kind of, only for executables
+	  	  - gives others same permissions as user
+		  - s replaces x permission on executable file
+
+Process:
+- any running program in execution
+ps : list processes currently running
+kill : terminates process by PID (ie kill 1234)
+- daemon = proess running in background (ie: cron for scheduled commands)
+
+Standard Streams:
+1. stdin(0) : contain data going into program
+2. stdout(1) : where program write output data
+3. stderr(2) : where program writes error msgs
+
+Redirection/Pipelines
+- puts output into file rather than being printed
+program < file : redirects file to program's stdin
+	ie: cat < file
+	cat hw.txt (outputs content in screen)
+	cat < hw.txt (get input fr hw.txt)
+program > file : redirect file stdout to file
+	ie: cat < file > file2
+program 2> file : redirect stderr to file
+	ie: cat <file 2>file2
+program >> file : appends to file
+program | program2 : assigns atdout of program1 to stdin of program2
+	ie: cat <file | sort >file2
+
+Text Processing Tools:
+wc : outputs count of lines, words, bytes
+   -w : only words
+head : extract top of files
+     head -n : get top n lines of text
+tail : extracts bottom of files
+     tail -n : get last n lines
+
+Locale:
+- set of parameter defining cultural preference (language/number system, area-specific things)
+- prints info about current locale envir
+- gets data from LC_* environment variables (ie LC_TIME, LC_NUMERIC)
+
+diff : comapres 2 files and outputs differences
+wget <URL> : retrieve content fr web servers
+
+To customize emacs: go to ~/.emacs
+   (setq-default fill-column 80)
+   in text file, M-x auto-fill-mode
+To go to emacs manual: C-h r
+Emacs:
+undo C-x u
+copy M-w
+kill C-w
+yank C-y
+dired C-x d
+open shell M-x shell
+run command M-! <command>
+compile : M-x compile gcc hello.c -o hello
+
+gcc compiling: gcc hello.c -o hello (-o specifies name of executable)
+run executable: ./hello

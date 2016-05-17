@@ -1,0 +1,82 @@
+Multithreading
+
+- parallelism allows multitasking and multithreading
+
+Multiprogramming - A computer running more than one program at a time (like running Excel and Firefox simultaneously) http://en.wikipedia.org/wiki/Multiprogramming
+
+Multiprocessing - A computer using more than one CPU at a time http://en.wikipedia.org/wiki/Multiprocessing
+   + thread share same address space (but error in 1 thread can bring down all threads)
+
+Multitasking - Tasks sharing a common resource (like 1 CPU) http://en.wikipedia.org/wiki/Computer_multitasking#Multithreading
+   + processes insulated from each other (1 error cant bring down another process)
+
+- multiple threads sharing single CPU need to time share and
+  context shift to share CPU time
+    + benefit: thread may wait for I/O and wastes time, so move onto
+      	       another task while waiting
+- multiple threads on multiple CPUs
+
+- single thread program same as one process
+
+How do processes communicate:
+ie: tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
+- pipes/sys calls
+
+- stack used for function calls, each thread diff stack
+- threads share everything except stack (ie share heap)
+  --> data sharing doesnt need sys calls
+
+- threads easier to create b/c only a new stack has to be made, everything else already there
+
+Race Condition
+- result depends on order of execution (when OS schedules threads)
+--> synchronization needed
+
+
+Lab:
+- eval performance of sort multithreaded
+export PATH=/usr/local/cs/bin:$PATH for diff sort
+- make file w floating pt #s
+  /dev/urandom: pseudo-random byte generator
+    + dev = devices
+    /dev/urandom | od - tf -N<80 million> > file
+- remove addresses given with od w/ sed and tr for just numbers
+- use time -p to time sort -g on data
+  time -p sort -g --parallel=[1, 2, 4, 8] 10M_file > /dev/null
+
+HW:
+- convert ray tracing program to multithreaded program
+- algorithm embarrassingly parallel (each pixel computation not dependent on each other)
+- split up pixel groups between more threads we make
+
+download ray tracer
+run to get output image
+multithread ray tracing (change main.c and Makefile)
+run multithreaded version and compare resulting img
+
+Basic pthread functions:
+- main thread + threads made; main's job to create 3 threads
+- careful of main thread ending before 3 threads finish exec their function (race condition)
+--> need synchronization to prevent this problem (pthread_join)
+1. pthread_create
+   makes new thread w/in process and makes it executable
+   can be called any number of times
+   ret 0 if success
+   ie:
+   pthread_t tids[3];
+   for (int t = 0; t < 3; t++)
+      ret = pthread_create(&tids[t], NULL, printMsg, (void *)t);
+      // if ret != 0 error
+2. pthread_join
+   makes originating thread wait for comletion of all spawned thread's tasks
+   w/o this originating thread will exit when finished job (ie main's job is to make threads)
+   ret 0 is success
+
+Original
+for i in width
+    for j in height
+    	do stuff
+
+- put nested loop into function and tell thread which pixels to work on
+
+add LDLIBS: -lm -lpthread

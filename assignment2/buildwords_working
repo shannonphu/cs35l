@@ -1,0 +1,14 @@
+#! /bin/bash
+
+    grep '<td>' $1 |
+    sed '1~2d' |
+    sed 's/<[^>]*>//g' |
+    sed 's/[,\\ ]/\n/g' |
+    tr 'A-Z' 'a-z' |
+    tr -cs 'a-z`' '[\n*]' |
+    sed 's/[^pkmnwlhaeiou`]//g' |
+    tr '`' '\'\' |
+    sed '/^\s*$/d' |
+    sort | uniq -u > hwords
+
+cat hwords

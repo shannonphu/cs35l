@@ -1,0 +1,34 @@
+I downloaded the tarball folder onto my local machine
+and unzipped it using tar -xzvf coreutils-7.6. Then I
+set it up by configuring and making. I ran ./configure
+--prefix=<my local coreutil directory>. Then I ran make
+to create the object code files for each source file.
+Lastly I ran make install to make the executable work
+and move it to the executable directory I specified.
+To then see the older, buggy version of ls in my
+local coreutils directory, I cd'ed into the directory
+I stored the downloaded coreutils in and ran ./src/ls
+-l /bin/bash and was able to reproduce the error in
+the time stamp mentioned in the lab spec. 
+
+Then I copy-pasted the second patch affecting ls.c from
+the link given in the lab into Emacs in a file named
+patch. To apply the patch I ran patch -p1 < patch which
+successfully applied the first and second hunk. But there
+was an error for hunk 1 that said "patch unexpectedly ends
+in middle of line". After testing out the patch, I found
+ls -l was not fixed. So I reversed the patch using
+patch -p1 -R < patch so that I could reapply it another
+way.
+
+Then I realized I didn't call make. So I reapplied
+the patch and did make. I saw the Makefile entering
+and leaving many directories. It recompiled ls, ls.o,
+dir, and vdir.
+
+Then I tested the patched version of ls and found that
+the bug was fixed. On current files, the correct date
+format is shown and also I found files over a year old,
+and the patched ls executable also works for those older
+files too.
+

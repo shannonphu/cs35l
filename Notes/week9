@@ -1,0 +1,57 @@
+Dynamic Linking
+
+- executable has combined obhect code files and definitions for
+functions used fr libraries
+
+Libraries:
+- pre-compiled object files packaged together
+1. Static
+   - statically linked: linker copies all function code
+   into executable at compile time
+2. Shared
+   - executable generated w/o linking yet; placeholder
+   put for function; during runtime linker will place code
+   in that placeholder location
+   1. dynamically linked shared lib
+      - OS responsible for loading lib on execution
+   2. dynamically loaded shared lib
+      - library used under program control, program has to
+      selectively call functions in lib
+
+How to make static library:
+add.h add.c => add.o
+sub.h sub.c => sub.o
+      gcc -c add.c (makes object code file)
+Make header file w/ both files' function declarations (math.h)
+Make library
+ar rs libmath.a add.o sub.o
+Usage:
+gcc -I . -c main.c
+    check for standard libraries and in current directory for libraries
+    gen main.o file
+gcc -o example main.o libmath.a
+    link lib to main.o and make executable
+
+Making dynamic libraries:
+Make object files but add -fPIC flag
+gcc -shared -o libmath.so add.o sub.o
+Copy lib to standard directories (/usr/lib)
+     idconfig /usr/lib
+Usage:
+gcc -o example main.o libmath.so
+
+
+ldd: run on executable, shows shared libs used in executable
+
+HW:
+Dynamic Loading API
+dlopen
+	pointer to lib wanna open
+dlsym
+	choose specific vars to load from lib
+dlerror
+	error if occur
+dlclose
+	close lib
+
+use ssh username@lnxsrv07 or 09 .seas.ucla.edu to test for hardware
